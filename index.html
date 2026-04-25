@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerPath AI 4.0：面向低资源大学生的公益求职路径诊断与行动规划助手</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; line-height: 1.7; color: #333; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); min-height: 100vh; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 50px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); color: white; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3); position: relative; overflow: hidden; }
+        header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.3; } }
+        header h1 { font-size: 2.8rem; margin-bottom: 12px; font-weight: 800; text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); position: relative; }
+        header .subtitle { font-size: 1.3rem; margin-bottom: 20px; opacity: 0.95; position: relative; }
+        .track-info { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; position: relative; }
+        .track { font-size: 0.9rem; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); padding: 8px 20px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3); }
+        .demo-btn { position: absolute; top: 20px; right: 30px; background: rgba(255, 255, 255, 0.9); color: #667eea; border: none; padding: 12px 24px; border-radius: 25px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+        .demo-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
+        .section-title { color: #667eea; margin-bottom: 20px; font-size: 1.6rem; font-weight: 700; border-bottom: 3px solid #667eea; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 8px; height: 28px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 4px; }
+        .info-section, .module-card { background: white; border-radius: 16px; padding: 28px; margin-bottom: 25px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+        .why-section { background: linear-gradient(135deg, #fff5f5 0%, #fff0f7 100%); border-left: 5px solid #ff6b6b; }
+        .charity-section { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-left: 5px solid #4caf50; }
+        .problems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+        .problem-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: transform 0.3s; }
+        .problem-card:hover { transform: translateY(-5px); }
+        .problem-card h4 { color: #ff6b6b; margin-bottom: 8px; font-size: 1rem; }
+        .problem-card p { color: #666; font-size: 0.9rem; }
+        .process-section { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3); }
+        .process-section h2 { color: white; border-bottom-color: rgba(255, 255, 255, 0.3); }
+        .process-steps { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+        .process-step { flex: 1; min-width: 140px; padding: 15px 12px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border-radius: 10px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s; }
+        .process-step:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px); }
+        .step-number { width: 32px; height: 32px; background: white; color: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: 700; font-size: 1rem; }
+        .process-step h3 { font-size: 0.95rem; margin-bottom: 6px; color: white; }
+        .process-step p { font-size: 0.8rem; opacity: 0.85; color: rgba(255, 255, 255, 0.9); }
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 25px; margin-bottom: 25px; }
+        .module-card { transition: all 0.3s; border: 1px solid rgba(102, 126, 234, 0.1); }
+        .module-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(102, 126, 234, 0.2); }
+        .module-card h2 { color: #667eea; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .module-icon { font-size: 1.3rem; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #444; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e8e8e8; border-radius: 8px; font-size: 0.95rem; transition: all 0.3s; font-family: inherit; background: #fafafa; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); background: white; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; width: 100%; margin-top: 8px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .btn-small { padding: 8px 14px; font-size: 0.85rem; width: auto; margin-top: 10px; margin-right: 8px; display: inline-block; }
+        .result { margin-top: 15px; padding: 20px; background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%); border-radius: 10px; border-left: 4px solid #667eea; }
+        .result h3 { color: #667eea; margin-bottom: 12px; font-size: 1.1rem; }
+        .card { background: white; border-radius: 10px; padding: 16px; margin-bottom: 12px; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06); border: 1px solid #f0f0f0; }
+        .card h4 { color: #764ba2; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+        .card p, .card li { color: #555; line-height: 1.6; font-size: 0.9rem; }
+        .card ul { padding-left: 18px; margin-top: 6px; }
+        .card li { margin-bottom: 4px; }
+        .job-database-section { background: linear-gradient(135deg, #fff9f0 0%, #fff5f5 100%); border-left: 5px solid #ffa500; }
+        .search-box { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-box .form-group { flex: 1; min-width: 200px; margin-bottom: 0; }
+        .job-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .job-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); border: 1px solid #f0f0f0; transition: all 0.3s; }
+        .job-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
+        .job-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .job-card h3 { color: #333; font-size: 1.15rem; margin-bottom: 4px; }
+        .job-category { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; white-space: nowrap; }
+        .job-card p { color: #666; margin-bottom: 8px; font-size: 0.9rem; }
+        .job-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+        .job-tag { background: #f0f0f0; color: #666; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .job-difficulty { display: flex; gap: 8px; margin-top: 8px; }
+        .difficulty-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .difficulty-low { background: #e8f5e9; color: #2e7d32; }
+        .difficulty-medium { background: #fff8e1; color: #f57f17; }
+        .difficulty-high { background: #ffebee; color: #c62828; }
+        .phase-badge { background: #e3f2fd; color: #1565c0; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+        .zero-basis { background: #fce4ec; color: #c2185b; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+        .doubao-float-btn { position: fixed; bottom: 25px; right: 25px; z-index: 1000; }
+        .doubao-btn { background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%); color: white; border: none; padding: 14px 26px; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4); display: flex; align-items: center; gap: 8px; }
+        .doubao-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 12px 40px rgba(255, 107, 107, 0.5); }
+        .footer { background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; padding: 40px; border-radius: 16px; margin-top: 40px; text-align: center; }
+        .footer h2 { margin-bottom: 20px; font-size: 1.5rem; color: white; }
+        .footer p { margin-bottom: 10px; opacity: 0.9; }
+        .footer ul { text-align: left; max-width: 600px; margin: 0 auto 20px; }
+        .footer li { margin-bottom: 8px; opacity: 0.9; }
+        .tested-jobs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; }
+        .tested-job-tag { background: rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 15px; font-size: 0.85rem; }
+        .collapsible { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); overflow: hidden; }
+        .collapsible-header { padding: 18px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1.1rem; }
+        .collapsible-header:hover { background: linear-gradient(135deg, #5a71d6 0%, #6a4190 100%); }
+        .collapsible-content { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .collapsible-content.open { padding: 24px; max-height: 2000px; }
+        .collapsible-arrow { transition: transform 0.3s; }
+        .collapsible-header.active .collapsible-arrow { transform: rotate(180deg); }
+        .user-profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .profile-option { padding: 14px 16px; background: #f8f9fa; border-radius: 10px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; font-size: 0.9rem; }
+        .profile-option:hover { background: #e8f4ff; border-color: #667eea; }
+        .profile-option.selected { background: #e8f4ff; border-color: #667eea; color: #667eea; font-weight: 600; }
+        .low-resource-toggle { display: flex; align-items: center; gap: 10px; padding: 15px; background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border-radius: 10px; margin-bottom: 15px; }
+        .toggle-switch { position: relative; width: 50px; height: 26px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.3s; border-radius: 26px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+        .toggle-switch input:checked + .toggle-slider { background-color: #4caf50; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+        .sample-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .sample-btn { padding: 8px 14px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .sample-btn:hover { background: #667eea; color: white; border-color: #667eea; }
+        .test-result-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        .test-result-table th, .test-result-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #eee; }
+        .test-result-table th { background: #667eea; color: white; font-weight: 600; }
+        .test-result-table tr:hover { background: #f8f9ff; }
+        .recommendation-list { margin-top: 15px; }
+        .recommend-item { padding: 15px; background: white; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border-left: 4px solid; }
+        .recommend-item.best { border-color: #4caf50; }
+        .recommend-item.good { border-color: #ff9800; }
+        .recommend-item.not-recommended { border-color: #f44336; opacity: 0.8; }
+        .recommend-item h4 { margin-bottom: 8px; font-size: 1rem; }
+        .recommend-item.best h4 { color: #2e7d32; }
+        .recommend-item.good h4 { color: #e65100; }
+        .recommend-item.not-recommended h4 { color: #c62828; }
+        .privacy-box { background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); border: 1px solid #a5d6a7; border-radius: 12px; padding: 20px; margin-top: 15px; }
+        .privacy-box h4 { color: #2e7d32; margin-bottom: 10px; font-size: 1rem; }
+        .scope-box { background: linear-gradient(135deg, #fff3e0 0%, #fff8e1 100%); border: 1px solid #ffcc80; border-radius: 12px; padding: 20px; margin-top: 15px; }
+        .scope-box h4 { color: #e65100; margin-bottom: 10px; font-size: 1rem; }
+        .transform-result { background: white; border-radius: 10px; padding: 16px; margin-bottom: 12px; border: 1px solid #e0e0e0; }
+        .transform-result h4 { color: #667eea; margin-bottom: 10px; font-size: 0.95rem; }
+        .scoring-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .score-item { padding: 15px; background: white; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border: 1px solid #e0e0e0; }
+        .score-item h4 { color: #667eea; margin-bottom: 10px; font-size: 0.95rem; }
+        .score-bar { height: 8px; background: #e0e0e0; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+        .score-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 4px; transition: width 0.5s ease; }
+        .score-value { font-size: 1.2rem; font-weight: 700; color: #667eea; margin-top: 5px; }
+        .risk-indicator { padding: 15px; border-radius: 10px; margin: 15px 0; }
+        .risk-green { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 4px solid #4caf50; }
+        .risk-yellow { background: linear-gradient(135deg, #fff3e0 0%, #ffcc80 100%); border-left: 4px solid #ff9800; }
+        .risk-red { background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border-left: 4px solid #f44336; }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px; }
+        .portfolio-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); border: 1px solid #f0f0f0; transition: all 0.3s; }
+        .portfolio-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
+        .portfolio-card h4 { color: #667eea; margin-bottom: 12px; font-size: 1.1rem; }
+        .portfolio-card p { color: #555; margin-bottom: 8px; font-size: 0.9rem; }
+        .portfolio-card .tag { display: inline-block; background: #f0f0f0; color: #666; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; margin-right: 6px; margin-bottom: 6px; }
+        .teacher-mode-card { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-radius: 12px; padding: 20px; margin: 15px 0; border-left: 4px solid #9c27b0; }
+        .teacher-mode-card h4 { color: #4a148c; margin-bottom: 10px; font-size: 1rem; }
+        .anti-anxiety-card { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 12px; padding: 20px; margin: 15px 0; border-left: 4px solid #1976d2; text-align: center; }
+        .anti-anxiety-card h4 { color: #1565c0; margin-bottom: 10px; font-size: 1.1rem; }
+        .anti-anxiety-card p { color: #283593; font-size: 1rem; line-height: 1.6; }
+        .weekly-plan { margin-top: 15px; }
+        .plan-day { display: flex; align-items: flex-start; gap: 12px; padding: 15px; background: white; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border: 1px solid #e0e0e0; }
+        .plan-day input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; cursor: pointer; }
+        .plan-day-content { flex: 1; }
+        .plan-day-content h4 { color: #667eea; margin-bottom: 5px; font-size: 1rem; }
+        .plan-day-content p { color: #555; font-size: 0.9rem; }
+        .charity-list { list-style: none; padding: 0; margin-top: 15px; }
+        .charity-list li { padding: 12px 16px; background: white; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #4caf50; display: flex; align-items: center; gap: 10px; }
+        .charity-list li::before { content: '✓'; color: #4caf50; font-weight: bold; font-size: 1.2rem; }
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            header h1 { font-size: 2rem; }
+            .demo-btn { position: relative; top: 0; right: 0; margin-top: 15px; width: 100%; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .job-cards-grid { grid-template-columns: 1fr; }
+            .process-step::after { display: none; }
+            .process-step { min-width: 100%; }
+            .doubao-float-btn { bottom: 15px; right: 15px; }
+            .doubao-btn { padding: 12px 20px; font-size: 0.9rem; }
+            .test-result-table { font-size: 0.8rem; }
+            .test-result-table th, .test-result-table td { padding: 8px 6px; }
+            .scoring-grid { grid-template-columns: 1fr; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CareerPath AI 4.0</h1>
+            <p class="subtitle">面向低资源大学生的公益求职路径诊断与行动规划助手</p>
+            <div class="track-info">
+                <div class="track">TRA E × 脉脉「AI 无限职场」SOLO 挑战赛</div>
+                <div class="track">“Hello AI 科技致善”公益赛道</div>
+                <div class="track">帮助大学生跨越求职迷茫</div>
+            </div>
+            <button class="demo-btn" onclick="enterDemoMode()">一键进入演示模式</button>
+        </header>
+
+        <div class="collapsible">
+            <div class="collapsible-header" onclick="toggleCollapse(this)">
+                <span>📋 选择你的当前状态（点击展开）</span>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <p style="color: #666; margin-bottom: 15px;">选择最符合你情况的选项，系统将据此调整建议的语气和重点（可多选）</p>
+                <div class="user-profile-grid">
+                    <div class="profile-option" onclick="toggleProfile(this)">🎓 普通本科生 / 双非学生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">🔄 跨专业求职学生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">💼 没有实习经历的学生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">🌱 低年级迷茫学生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">🏠 家庭资源较少、缺少就业指导的学生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">🎯 应届毕业生</div>
+                    <div class="profile-option" onclick="toggleProfile(this)">📚 专升本 / 高职学生</div>
+                </div>
+                <button class="btn" onclick="confirmProfile()" style="max-width: 300px; margin-top: 15px;">确认我的状态</button>
+                <div id="profile-result"></div>
+            </div>
+        </div>
+
+        <div class="info-section why-section">
+            <h2 class="section-title">为什么需要这个工具</h2>
+            <p style="font-size: 1rem; color: #555; margin-bottom: 15px;">面向求职迷茫、资源不足的大学生，提供零成本的岗位理解和行动规划支持</p>
+            <div class="problems-grid">
+                <div class="problem-card"><h4>看不懂岗位 JD</h4><p>招聘描述写的很专业，但不知道具体要做什么</p></div>
+                <div class="problem-card"><h4>不知道真实工作内容</h4><p>进去之后每天到底干什么？和想象的一样吗？</p></div>
+                <div class="problem-card"><h4>不知道自己差在哪里</h4><p>感觉自己什么都会一点，但和岗位要求差距到底多大？</p></div>
+                <div class="problem-card"><h4>不知道下一步该做什么</h4><p>知道自己有差距，但不知道从哪开始补</p></div>
+                <div class="problem-card"><h4>缺少低成本指导</h4><p>付费课程太贵，问人又不好意思，有没有什么免费又专业的指导？</p></div>
+            </div>
+        </div>
+
+        <div class="info-section charity-section">
+            <h2 class="section-title">为什么这是一个公益求职工具</h2>
+            <ul class="charity-list">
+                <li>缺少实习资源的学生</li>
+                <li>跨专业转向的学生</li>
+                <li>非名校背景学生</li>
+                <li>不熟悉企业招聘语言的学生</li>
+                <li>缺少一对一就业指导机会的学生</li>
+                <li>家庭资源较少、求职信息来源有限的学生</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">反焦虑提示</h2>
+            <div class="anti-anxiety-card">
+                <h4>🌟 你不是一个人在战斗</h4>
+                <p>你现在不是没有方向，而是缺少拆解路径。不要同时准备太多岗位，建议先确定 1 个主方向和 1 个备选方向。没有实习经历并不意味着没有竞争力，可以先用课程项目、校园经历和公开数据集作品补充证明材料。求职准备要先形成可展示产出，而不是只收藏资料。</p>
+            </div>
+        </div>
+
+        <div class="process-section">
+            <h2 class="section-title" style="color: white; border-bottom-color: rgba(255,255,255,0.3);">使用流程</h2>
+            <div class="process-steps">
+                <div class="process-step"><div class="step-number">1</div><h3>选择当前状态</h3><p>开启个性化建议</p></div>
+                <div class="process-step"><div class="step-number">2</div><h3>选择/搜索岗位</h3><p>了解岗位真实情况</p></div>
+                <div class="process-step"><div class="step-number">3</div><h3>能力差距分析</h3><p>精准识别短板</p></div>
+                <div class="process-step"><div class="step-number">4</div><h3>求职路径诊断</h3><p>6维度评分分析</p></div>
+                <div class="process-step"><div class="step-number">5</div><h3>风险评估</h3><p>红黄绿风险提示</p></div>
+                <div class="process-step"><div class="step-number">6</div><h3>生成行动清单</h3><p>制定可执行计划</p></div>
+                <div class="process-step"><div class="step-number">7</div><h3>作品集建议</h3><p>低成本项目推荐</p></div>
+                <div class="process-step"><div class="step-number">8</div><h3>模拟面试练习</h3><p>获取反馈改进</p></div>
+                <div class="process-step"><div class="step-number">9</div><h3>豆包 AI 深度咨询</h3><p>继续对话规划</p></div>
+            </div>
+        </div>
+
+        <div class="collapsible">
+            <div class="collapsible-header" onclick="toggleCollapse(this)">
+                <span>🎯 岗位推荐器（点击展开）</span>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="form-group">
+                    <label>专业</label>
+                    <input type="text" id="rec-major" placeholder="如：计算机、市场营销、金融">
+                </div>
+                <div class="form-group">
+                    <label>年级</label>
+                    <select id="rec-grade"><option value="">请选择</option><option value="大一">大一</option><option value="大二">大二</option><option value="大三">大三</option><option value="大四">大四</option><option value="研一">研一</option><option value="研二">研二</option></select>
+                </div>
+                <div class="form-group">
+                    <label>已掌握技能</label>
+                    <input type="text" id="rec-skills" placeholder="如：Python、Excel、写作、PS">
+                </div>
+                <div class="form-group">
+                    <label>是否有实习经历</label>
+                    <select id="rec-internship"><option value="无">无</option><option value="有1段">有1段</option><option value="有2段以上">有2段以上</option></select>
+                </div>
+                <div class="form-group">
+                    <label>兴趣方向</label>
+                    <select id="rec-interest"><option value="技术">技术/编程</option><option value="运营">运营/市场</option><option value="管理">管理/行政</option><option value="创意">创意/设计</option><option value="教育">教育/公益</option><option value="不确定">不确定</option></select>
+                </div>
+                <div class="form-group">
+                    <label>可投入准备周期</label>
+                    <select id="rec-time"><option value="7天">7天</option><option value="14天">14天</option><option value="30天">30天</option><option value="60天以上">60天以上</option></select>
+                </div>
+                <button class="btn" onclick="recommendJobs()">获取岗位推荐</button>
+                <div id="recommend-result" class="result"></div>
+            </div>
+        </div>
+
+        <div class="collapsible">
+            <div class="collapsible-header" onclick="toggleCollapse(this)">
+                <span>📚 岗位数据库（点击展开）</span>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="search-box">
+                    <div class="form-group">
+                        <label>岗位类别</label>
+                        <select id="category-filter" onchange="filterJobs()"><option value="全部">全部</option><option value="技术类">技术类</option><option value="产品运营类">产品运营类</option><option value="商科管理类">商科管理类</option><option value="文科公共类">文科公共类</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>关键词搜索</label>
+                        <input type="text" id="keyword-search" placeholder="搜索岗位名称、技能、工具等..." oninput="filterJobs()">
+                    </div>
+                </div>
+                <div id="job-cards-container" class="job-cards-grid"></div>
+            </div>
+        </div>
+
+        <div class="modules-grid">
+            <div class="module-card">
+                <h2><span class="module-icon">📋</span>岗位 JD 翻译器</h2>
+                <div class="form-group">
+                    <label>粘贴招聘岗位描述（JD）</label>
+                    <textarea id="jd-input" placeholder="请粘贴完整的招聘岗位描述..."></textarea>
+                </div>
+                <button class="btn" onclick="translateJD()">深度解析 JD</button>
+                <div id="jd-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">🔍</span>个人能力差距分析</h2>
+                <div class="form-group"><label>专业</label><input type="text" id="major" placeholder="如：计算机科学、金融学"></div>
+                <div class="form-group">
+                    <label>年级</label>
+                    <select id="grade"><option value="">请选择</option><option value="大一">大一</option><option value="大二">大二</option><option value="大三">大三</option><option value="大四">大四</option><option value="研一">研一</option><option value="研二">研二</option></select>
+                </div>
+                <div class="form-group"><label>已掌握技能</label><textarea id="skills" placeholder="如：Python、Excel、数据分析"></textarea></div>
+                <div class="form-group"><label>项目经历</label><textarea id="projects" placeholder="描述你参与的项目"></textarea></div>
+                <div class="form-group"><label>实习经历</label><textarea id="internships" placeholder="描述你的实习经历"></textarea></div>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="target-job" placeholder="如：数据分析实习生"></div>
+                <button class="btn" onclick="analyzeGap()">生成能力差距报告</button>
+                <div id="gap-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">📊</span>求职路径诊断评分</h2>
+                <div class="form-group"><label>专业</label><input type="text" id="diagnostic-major" placeholder="如：交通运输"></div>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="diagnostic-job" placeholder="如：数据分析实习生"></div>
+                <div class="form-group"><label>已有技能</label><textarea id="diagnostic-skills" placeholder="如：Python、Excel"></textarea></div>
+                <div class="form-group"><label>项目经历</label><textarea id="diagnostic-projects" placeholder="描述你的项目经历"></textarea></div>
+                <div class="form-group"><label>实习经历</label><textarea id="diagnostic-internships" placeholder="描述你的实习经历"></textarea></div>
+                <button class="btn" onclick="diagnosticScore()">生成诊断评分</button>
+                <div id="diagnostic-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">🚦</span>红黄绿风险提示</h2>
+                <div class="form-group"><label>专业</label><input type="text" id="risk-major" placeholder="如：交通运输"></div>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="risk-job" placeholder="如：数据分析实习生"></div>
+                <div class="form-group"><label>已有技能</label><textarea id="risk-skills" placeholder="如：Python、Excel"></textarea></div>
+                <div class="form-group"><label>项目经历</label><textarea id="risk-projects" placeholder="描述你的项目经历"></textarea></div>
+                <div class="form-group"><label>实习经历</label><textarea id="risk-internships" placeholder="描述你的实习经历"></textarea></div>
+                <button class="btn" onclick="riskAssessment()">生成风险评估</button>
+                <div id="risk-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">📅</span>阶段性行动清单</h2>
+                <div class="low-resource-toggle">
+                    <label class="toggle-switch"><input type="checkbox" id="low-resource-mode" onchange="toggleLowResourceMode()"><span class="toggle-slider"></span></label>
+                    <span style="font-weight: 600; color: #2e7d32;">🌱 低资源求职模式（开启后优先推荐免费/低成本方案）</span>
+                </div>
+                <div class="form-group">
+                    <label>计划时长</label>
+                    <select id="plan-duration"><option value="7">7 天计划（入门）</option><option value="14">14 天计划（进阶）</option><option value="30">30 天计划（系统准备）</option></select>
+                </div>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="plan-target-job" placeholder="如：数据分析实习生"></div>
+                <button class="btn" onclick="generatePlan()">生成行动清单</button>
+                <div id="plan-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">📁</span>作品集生成建议</h2>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="portfolio-job" placeholder="如：数据分析实习生"></div>
+                <div class="form-group"><label>已掌握技能</label><textarea id="portfolio-skills" placeholder="如：Python、Excel"></textarea></div>
+                <button class="btn" onclick="generatePortfolio()">获取作品集建议</button>
+                <div id="portfolio-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">🎯</span>模拟面试反馈</h2>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="interview-job" placeholder="如：产品经理实习生"></div>
+                <div class="form-group"><label>面试问题</label><input type="text" id="interview-question" placeholder="输入面试问题或留空获取推荐问题"></div>
+                <div class="form-group"><label>你的回答</label><textarea id="interview-answer" placeholder="请输入你对这个问题的回答..."></textarea></div>
+                <button class="btn" onclick="mockInterview()">获取面试反馈</button>
+                <div id="interview-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">📅</span>求职周计划追踪</h2>
+                <div class="form-group"><label>目标岗位</label><input type="text" id="weekly-job" placeholder="如：数据分析实习生"></div>
+                <button class="btn" onclick="generateWeeklyPlan()">生成周计划</button>
+                <div id="weekly-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">✨</span>简历经历转化器</h2>
+                <div class="form-group"><label>输入一段普通经历</label><textarea id="experience-input" placeholder="如：我参加过学生会，负责活动通知和签到"></textarea></div>
+                <div class="form-group"><label>目标岗位类型</label>
+                    <select id="target-job-type"><option value="运营">运营类</option><option value="行政">行政类</option><option value="项目">项目管理类</option><option value="市场">市场营销类</option><option value="产品">产品类</option></select>
+                </div>
+                <button class="btn" onclick="transformExperience()">转化简历表达</button>
+                <div id="transform-result" class="result"></div>
+            </div>
+
+            <div class="module-card">
+                <h2><span class="module-icon">🧪</span>一键填入测试样例</h2>
+                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">点击按钮自动填充对应模块，方便快速体验</p>
+                <div class="sample-buttons">
+                    <button class="sample-btn" onclick="loadSample('数据分析')">数据分析实习生</button>
+                    <button class="sample-btn" onclick="loadSample('AI产品')">AI 产品助理</button>
+                    <button class="sample-btn" onclick="loadSample('新媒体运营')">新媒体运营</button>
+                    <button class="sample-btn" onclick="loadSample('财务')">财务助理</button>
+                    <button class="sample-btn" onclick="loadSample('公益')">公益项目助理</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">模拟测试结果</h2>
+            <p style="color: #666; margin-bottom: 15px;">以下为模拟测试结果，用于验证功能有效性，非真实用户实验数据</p>
+            <table class="test-result-table">
+                <thead><tr><th>测试岗位</th><th>JD解析完整度</th><th>行动清单可执行性</th><th>面试反馈有效性</th><th>总体评价</th></tr></thead>
+                <tbody>
+                    <tr><td>数据分析实习生</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★★☆</td><td>良好</td></tr>
+                    <tr><td>AI 产品助理</td><td>★★★★★</td><td>★★★☆☆</td><td>★★★★☆</td><td>良好</td></tr>
+                    <tr><td>新媒体运营实习生</td><td>★★★★☆</td><td>★★★★★</td><td>★★★★★</td><td>优秀</td></tr>
+                    <tr><td>财务助理</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★☆☆</td><td>良好</td></tr>
+                    <tr><td>公益项目助理</td><td>★★★★★</td><td>★★★★★</td><td>★★★★☆</td><td>优秀</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">隐私保护与作品边界说明</h2>
+            <div class="privacy-box">
+                <h4>🔒 隐私说明</h4>
+                <p>当前演示版本不保存用户输入内容，不上传个人简历和求职信息，所有分析仅在本地页面展示。关闭浏览器后所有输入数据将自动清除。如需保存建议，请自行复制粘贴到本地文档。</p>
+            </div>
+            <div class="scope-box">
+                <h4>📌 作品边界</h4>
+                <p>本工具不能替代高校就业指导老师、企业 HR 或专业职业咨询服务，主要用于求职准备前期的信息整理、岗位理解和行动规划。最终求职决策请结合多方意见综合判断。</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="section-title">验证方式与下一步</h2>
+            <h3 style="color: #667eea; margin: 15px 0 10px; font-size: 1.1rem;">已模拟测试岗位</h3>
+            <div class="tested-jobs">
+                <span class="tested-job-tag">数据分析实习生</span>
+                <span class="tested-job-tag">AI 产品助理</span>
+                <span class="tested-job-tag">新媒体运营实习生</span>
+                <span class="tested-job-tag">财务助理</span>
+                <span class="tested-job-tag">公益项目助理</span>
+            </div>
+            <h3 style="color: #667eea; margin: 15px 0 10px; font-size: 1.1rem;">测试维度</h3>
+            <ul style="padding-left: 20px; color: #666; font-size: 0.9rem;">
+                <li style="margin-bottom: 6px;">JD 解析是否清晰：能够准确解读岗位要求的真实含义</li>
+                <li style="margin-bottom: 6px;">能力差距是否具体：输出的差距分析有针对性</li>
+                <li style="margin-bottom: 6px;">行动清单是否可执行：任务具体可衡量</li>
+                <li style="margin-bottom: 6px;">面试反馈是否有帮助：能够指出具体问题</li>
+                <li style="margin-bottom: 6px;">诊断评分是否合理：6维度评分结果符合实际情况</li>
+                <li style="margin-bottom: 6px;">风险提示是否准确：红黄绿风险等级判断合理</li>
+                <li style="margin-bottom: 6px;">作品集建议是否可行：推荐的项目低成本可执行</li>
+            </ul>
+            <h3 style="color: #667eea; margin: 15px 0 10px; font-size: 1.1rem;">下一步计划</h3>
+            <ul style="padding-left: 20px; color: #666; font-size: 0.9rem;">
+                <li style="margin-bottom: 6px;">接入真实岗位数据：与招聘平台合作获取最新岗位信息</li>
+                <li style="margin-bottom: 6px;">增加简历上传与评分：AI 自动分析并给出优化建议</li>
+                <li style="margin-bottom: 6px;">增加岗位推荐：根据用户背景智能推荐最匹配岗位</li>
+                <li style="margin-bottom: 6px;">邀请真实大学生试用并收集反馈：持续优化产品体验</li>
+                <li style="margin-bottom: 6px;">未来可通过豆包等 AI 助手增强深度对话能力</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <h2>CareerPath AI 4.0</h2>
+            <p style="font-size: 1rem;">面向低资源大学生的公益求职路径诊断与行动规划助手</p>
+            <p>TRA E × 脉脉「AI 无限职场」SOLO 挑战赛</p>
+            <p>“Hello AI 科技致善”公益赛道参赛作品</p>
+            <p style="margin-top: 15px; opacity: 0.7; font-size: 0.85rem;">帮助资源有限的大学生跨越求职迷茫，找到属于自己的职业发展路径</p>
+        </div>
+    </div>
+
+    <div class="doubao-float-btn">
+        <button class="doubao-btn" onclick="openDoubao()">
+            <span>🤖</span><span>豆包 AI 助手</span>
+        </button>
+    </div>
+
+    <script>
+    let currentTargetJob = '';
+    let lowResourceMode = false;
+    let selectedProfiles = [];
+
+    const jobDatabase = [
+        {id:1,name:"数据分析实习生",category:"技术类",summary:"负责数据收集、清洗、分析和可视化",workContent:"1. 从数据库提取数据 2. 使用SQL/Python清洗处理 3. 使用Excel/Python/Tableau分析可视化 4. 撰写分析报告",coreSkills:["SQL查询","Python数据处理","Excel高级","可视化"],tools:["MySQL","Python(Pandas)","Excel","Tableau"],suitableMajors:["统计学","数学","计算机","金融"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习SQL基础(SELECT/WHERE/GROUP BY)","Day3-4: 学习Python Pandas进行数据清洗","Day5-6: 完成Kaggle入门SQL练习10道","Day7: 整理豆瓣电影评分分析报告"],focus:["SQL查询","数据清洗","基础统计"],project:"完成豆瓣电影评分数据分析",resume:"添加SQL、Python数据处理描述",interview:"练习3道SQL常见题"}},
+        {id:2,name:"AI产品助理",category:"技术类",summary:"协助AI产品规划、设计、跟进",workContent:"1. 市场需求调研和用户研究 2. 参与AI产品功能设计 3. 跟踪算法效果 4. 协调团队推进项目 5. 整理产品文档",coreSkills:["产品思维","AI认知","需求分析","原型设计"],tools:["Axure","Figma","XMind","PPT"],suitableMajors:["计算机","人工智能","产品设计"],difficulty:"中",phase:"准备期",zeroBasis:"谨慎",prep7Days:{tasks:["Day1-2: 体验5款AI产品写体验报告","Day3-4: 学习Axure/Figma基础","Day5-6: 阅读10篇AI产品分析文章","Day7: 整理AI产品经理知识地图"],focus:["AI产品认知","原型基础","行业知识"],project:"设计AI产品功能原型",resume:"突出对AI行业的关注",interview:"准备你为什么想做AI产品"}},
+        {id:3,name:"算法实习生",category:"技术类",summary:"研究和实现机器学习/深度学习算法",workContent:"1. 阅读和复现学术论文 2. 使用PyTorch/TensorFlow实现 3. 数据处理和模型训练 4. 调参优化性能 5. 撰写技术文档",coreSkills:["Python","机器学习算法","深度学习框架","数据结构"],tools:["Python","PyTorch","TensorFlow","Jupyter"],suitableMajors:["计算机","人工智能","数学"],difficulty:"高",phase:"准备期",zeroBasis:"不建议直接投",prep7Days:{tasks:["Day1-2: 复习Python基础和面向对象","Day3-4: 学习PyTorch官方教程","Day5-6: 复习常见机器学习算法原理","Day7: 完成Kaggle入门题"],focus:["Python编程","PyTorch","算法基础"],project:"完成房价预测模型",resume:"突出算法理论基础",interview:"练习手写代码和算法原理"}},
+        {id:4,name:"前端开发实习生",category:"技术类",summary:"负责Web前端页面开发",workContent:"1. 使用HTML/CSS/JavaScript开发页面 2. 使用React/Vue开发组件 3. 对接后端API 4. 优化页面性能 5. 解决浏览器兼容性",coreSkills:["HTML/CSS","JavaScript","前端框架","响应式设计"],tools:["VS Code","Chrome DevTools","Git","React/Vue"],suitableMajors:["计算机","软件工程","数字媒体"],difficulty:"中",phase:"准备期",zeroBasis:"谨慎",prep7Days:{tasks:["Day1-2: 复习HTML5语义化和CSS3特性","Day3-4: 深入学习JavaScript(闭包/原型)","Day5-6: 学习React基础","Day7: 完成TodoList小项目"],focus:["JavaScript深入","React入门","实战项目"],project:"完成个人技术博客",resume:"突出动手项目经验",interview:"练习JavaScript底层原理"}},
+        {id:5,name:"后端开发实习生",category:"技术类",summary:"负责服务器端业务逻辑开发",workContent:"1. 使用Python/Java/Go开发后端服务 2. 设计数据库和API 3. 实现业务逻辑 4. 编写测试和文档 5. 部署运维支持",coreSkills:["编程语言","数据库","API设计","后端框架"],tools:["Python/Flask","MySQL","Git","Docker"],suitableMajors:["计算机","软件工程","通信"],difficulty:"中",phase:"准备期",zeroBasis:"谨慎",prep7Days:{tasks:["Day1-2: 复习Python面向对象","Day3-4: 学习Flask框架REST API","Day5-6: 学习MySQL基础(CRUD/索引)","Day7: 完成用户管理API"],focus:["Python深入","Flask","MySQL"],project:"完成用户注册登录API",resume:"突出后端基础和API设计",interview:"练习Python语法题"}},
+        {id:6,name:"测试开发实习生",category:"技术类",summary:"开发自动化测试工具和框架",workContent:"1. 设计和实现自动化测试框架 2. 编写自动化测试用例 3. 执行功能/接口/性能测试 4. 提交跟踪bug 5. 编写测试报告",coreSkills:["测试理论","编程能力","自动化测试","缺陷分析"],tools:["Python","Selenium","Appium","JMeter"],suitableMajors:["计算机","软件工程"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 复习软件测试基础理论","Day3-4: 学习Python unittest/pytest","Day5-6: 学习Selenium进行UI自动化","Day7: 完成登录功能自动化脚本"],focus:["测试理论","Python","Selenium"],project:"完成Web登录自动化测试",resume:"突出测试思维和工具能力",interview:"准备测试理论题"}},
+        {id:7,name:"运维工程师助理",category:"技术类",summary:"负责服务器运维和监控",workContent:"1. 部署配置Linux服务器 2. 监控系统状态 3. 处理线上故障 4. 编写运维脚本 5. 容量规划和优化",coreSkills:["Linux","Shell","Docker","监控工具"],tools:["Linux","Docker","Kubernetes","Prometheus"],suitableMajors:["计算机","网络工程","信息安全"],difficulty:"中",phase:"准备期",zeroBasis:"不适合直接投",prep7Days:{tasks:["Day1-2: 复习Linux基础命令","Day3-4: 学习Shell脚本编程","Day5-6: 学习Docker基础","Day7: 搭建LNMP环境"],focus:["Linux","Shell","Docker"],project:"完成服务器监控脚本",resume:"突出Linux和脚本能力",interview:"练习Linux命令和故障题"}},
+        {id:8,name:"大数据开发实习生",category:"技术类",summary:"负责大数据处理平台开发",workContent:"1. 使用Hadoop/Spark进行大数据处理 2. 开发数据ETL pipeline 3. 设计数据仓库 4. 优化数据处理性能 5. 编写文档",coreSkills:["Hadoop","Spark","SQL","数据仓库","ETL"],tools:["Hadoop","Spark","Hive","Kafka"],suitableMajors:["计算机","大数据","统计学"],difficulty:"高",phase:"冲刺期",zeroBasis:"不建议直接投",prep7Days:{tasks:["Day1-2: 学习Hadoop生态概述","Day3-4: 学习Spark基础","Day5-6: 学习Hive基础和SQL","Day7: 完成单词统计MapReduce"],focus:["Hadoop","Spark","Hive"],project:"完成电商日志数据分析",resume:"突出大数据处理能力",interview:"练习大数据组件原理"}},
+        {id:9,name:"机器学习实习生",category:"技术类",summary:"研究和应用机器学习算法",workContent:"1. 业务问题转化为ML问题 2. 数据预处理和特征工程 3. 模型选择训练调优 4. 模型部署和评估 5. 撰写技术报告",coreSkills:["机器学习算法","Python","特征工程","模型评估"],tools:["Python","Scikit-learn","XGBoost","Pandas"],suitableMajors:["计算机","人工智能","数学"],difficulty:"高",phase:"准备期",zeroBasis:"不建议直接投",prep7Days:{tasks:["Day1-2: 复习机器学习算法分类","Day3-4: 学习特征工程方法","Day5-6: 学习模型评估指标","Day7: 完成Titanic预测项目"],focus:["算法选择","特征工程","模型评估"],project:"完成Titanic生存预测",resume:"突出特征工程和模型选择",interview:"练习算法原理"}},
+        {id:10,name:"计算机视觉实习生",category:"技术类",summary:"开发和优化计算机视觉算法",workContent:"1. 图像分类/检测/分割任务 2. 数据集标注清洗 3. 模型训练调优 4. 算法优化部署 5. 编写技术文档",coreSkills:["深度学习","图像处理","CV框架","Python"],tools:["OpenCV","PyTorch","MMDetection","Labelme"],suitableMajors:["计算机","人工智能","自动化"],difficulty:"高",phase:"冲刺期",zeroBasis:"不建议直接投",prep7Days:{tasks:["Day1-2: 复习图像处理和OpenCV","Day3-4: 学习CNN和ResNet","Day5-6: 学习目标检测基础","Day7: 复现目标检测项目"],focus:["OpenCV","CNN","目标检测"],project:"完成口罩检测项目",resume:"突出CV项目经验",interview:"练习CNN原理"}},
+        {id:11,name:"产品经理实习生",category:"产品运营类",summary:"协助产品规划、功能设计、项目管理",workContent:"1. 市场需求调研和用户研究 2. 编写PRD和原型 3. 跨部门协调 4. 数据分析和评估 5. 竞品分析",coreSkills:["需求分析","产品设计","项目管理","数据分析"],tools:["Axure","XMind","PPT","Excel"],suitableMajors:["不限","计算机","设计","商科"],difficulty:"中",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 下载体验5款App写体验报告","Day3-4: 学习原型工具基础","Day5-6: 阅读10篇产品分析文章","Day7: 完成一个功能的原型"],focus:["产品感知","原型基础","行业知识"],project:"为大学生设计功能模块",resume:"突出产品思维",interview:"准备为什么想做PM"}},
+        {id:12,name:"用户运营实习生",category:"产品运营类",summary:"负责用户增长、留存提升",workContent:"1. 用户拉新促活活动策划 2. 用户分层精细化运营 3. 用户数据分析 4. 社群运营沟通 5. 用户体验优化",coreSkills:["用户思维","活动策划","数据分析","社群运营"],tools:["微信群","企业微信","Excel","问卷星"],suitableMajors:["不限","市场营销","新闻","心理学"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析3款产品用户运营策略","Day3-4: 学习用户分层模型","Day5-6: 策划用户拉新活动方案","Day7: 完成活动方案PPT"],focus:["用户模型","活动策划","文案能力"],project:"策划早起打卡活动",resume:"突出活动策划能力",interview:"准备活动策划类题"}},
+        {id:13,name:"内容运营实习生",category:"产品运营类",summary:"负责内容策划、编辑发布",workContent:"1. 内容选题策划和文案撰写 2. 内容编辑排版发布 3. 内容数据分析优化 4. 内容素材收集整理 5. 内容库建设维护",coreSkills:["文案写作","内容策划","数据分析","编辑排版"],tools:["微信公众号","秀米","135编辑器","Excel"],suitableMajors:["新闻传播","中文","市场营销"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析5个头部账号内容策略","Day3-4: 撰写3篇不同风格文章","Day5-6: 学习排版工具","Day7: 完成账号定位方案"],focus:["文案基础","分析能力","工具使用"],project:"完成成长类账号内容规划",resume:"突出文案能力",interview:"准备内容策划题"}},
+        {id:14,name:"新媒体运营实习生",category:"产品运营类",summary:"负责双微一抖等平台运营",workContent:"1. 微博/微信/抖音平台内容发布运营 2. 策划新媒体营销活动 3. 粉丝互动社群维护 4. 数据分析评估 5. 热点话题跟进",coreSkills:["新媒体运营","内容策划","粉丝运营","热点捕捉"],tools:["微博","微信公众号","抖音","小红书"],suitableMajors:["新闻传播","市场营销","中文"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析5个头部新媒体账号","Day3-4: 学习各平台规则","Day5-6: 策划新媒体营销活动","Day7: 完成活动策划案"],focus:["平台规则","活动策划","热点敏感"],project:"策划开学季营销活动",resume:"突出新媒体经验",interview:"准备新媒体运营题"}},
+        {id:15,name:"电商运营实习生",category:"产品运营类",summary:"负责电商店铺运营",workContent:"1. 店铺日常运营和商品上下架 2. 数据分析 3. 活动策划申报 4. 客服评价管理 5. 竞品分析调研",coreSkills:["电商运营","数据分析","活动策划","平台规则"],tools:["淘宝/京东后台","生意参谋","Excel"],suitableMajors:["电子商务","市场营销","工商管理"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习电商平台规则","Day3-4: 学习数据指标","Day5-6: 策划大促活动方案","Day7: 完成策划案"],focus:["平台规则","数据指标","活动策划"],project:"完成618活动策划",resume:"突出电商数据思维",interview:"准备电商运营题"}},
+        {id:16,name:"社群运营实习生",category:"产品运营类",summary:"负责微信群/QQ群运营",workContent:"1. 社群搭建维护 2. 内容发布活动策划 3. 社群数据分析优化 4. 用户问题反馈处理 5. KOC挖掘培养",coreSkills:["社群运营","活动策划","沟通能力","数据分析"],tools:["企业微信","微信群","wetool","Excel"],suitableMajors:["不限","市场营销","电子商务"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析5个优秀社群策略","Day3-4: 学习社群运营工具","Day5-6: 策划社群裂变活动","Day7: 完成活动策划案"],focus:["社群定位","裂变","工具使用"],project:"策划学习类社群裂变",resume:"突出社群增长经验",interview:"准备社群运营题"}},
+        {id:17,name:"短视频运营实习生",category:"产品运营类",summary:"负责短视频内容策划、拍摄剪辑",workContent:"1. 短视频选题策划和脚本撰写 2. 视频拍摄剪辑制作 3. 账号日常运营数据分析 4. 热点跟踪借势 5. 粉丝互动评论维护",coreSkills:["短视频策划","拍摄剪辑","账号运营","热点敏感"],tools:["剪映","PR","抖音","快手"],suitableMajors:["广播电视","新闻传播","编导"],difficulty:"中",phase:"准备期",zeroBasis:"谨慎",prep7Days:{tasks:["Day1-2: 分析10个爆款短视频","Day3-4: 学习剪映基础剪辑","Day5-6: 撰写3个短视频脚本","Day7: 完成账号定位方案"],focus:["内容分析","剪辑基础","脚本"],project:"完成知识类账号30天规划",resume:"突出内容策划剪辑能力",interview:"准备短视频运营题"}},
+        {id:18,name:"活动运营实习生",category:"产品运营类",summary:"负责线上线下活动策划执行",workContent:"1. 活动方案策划和预算制定 2. 资源对接执行跟进 3. 活动宣传推广 4. 活动现场执行协调 5. 活动数据分析和复盘",coreSkills:["活动策划","项目管理","资源协调","数据分析"],tools:["PPT","Excel","Project","活动行"],suitableMajors:["不限","市场营销","工商管理"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析5个优秀活动案例","Day3-4: 学习活动策划全流程","Day5-6: 撰写活动策划案","Day7: 完成策划案PPT"],focus:["策划能力","流程理解","文案"],project:"策划校园职业规划讲座",resume:"突出策划能力和执行力",interview:"准备活动策划题"}},
+        {id:19,name:"市场营销实习生",category:"商科管理类",summary:"负责市场调研、营销策划",workContent:"1. 市场营销调研和竞品分析 2. 营销方案策划执行 3. 品牌推广宣传 4. 渠道拓展维护 5. 营销效果数据分析",coreSkills:["市场营销","品牌策划","数据分析","沟通协调"],tools:["PPT","Excel","问卷星","百度统计"],suitableMajors:["市场营销","工商管理","广告"],difficulty:"中",phase:"准备期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习市场营销基础理论","Day3-4: 分析3个品牌营销案例","Day5-6: 撰写营销策划案","Day7: 完成策划案PPT"],focus:["营销理论","案例分析","策划"],project:"完成新产品上市策划",resume:"突出营销思维和策划能力",interview:"准备营销策划题"}},
+        {id:20,name:"人力资源实习生",category:"商科管理类",summary:"协助招聘、培训、员工关系",workContent:"1. 简历筛选和电话沟通 2. 面试安排协调 3. 招聘数据统计分析 4. 员工档案整理维护 5. 培训支持工作",coreSkills:["沟通能力","Excel","招聘流程","档案管理"],tools:["Excel","PPT","招聘系统","邮箱"],suitableMajors:["人力资源","工商管理","心理学"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 了解HR六大模块","Day3-4: 学习电话沟通技巧","Day5-6: 练习Excel数据统计","Day7: 完成招聘需求分析"],focus:["招聘流程","沟通","Excel"],project:"完成一周招聘工作实习",resume:"突出沟通能力和细心",interview:"准备HR基础题"}},
+        {id:21,name:"财务助理",category:"商科管理类",summary:"协助财务核算、报表编制",workContent:"1. 原始凭证审核和记账 2. 发票管理和报销审核 3. 财务报表编制辅助 4. 财务数据统计分析 5. 财务档案整理装订",coreSkills:["财务基础","Excel","会计核算","细心认真"],tools:["Excel","用友","金蝶","PPT"],suitableMajors:["会计学","财务管理","审计"],difficulty:"中",phase:"准备期",zeroBasis:"谨慎",prep7Days:{tasks:["Day1-2: 复习会计基础","Day3-4: 学习Excel函数和数据透视表","Day5-6: 了解财务报表基础","Day7: 完成费用报销流程学习"],focus:["会计基础","Excel","流程"],project:"完成费用报销审核练习",resume:"突出财务基础和细心",interview:"准备财务基础题"}},
+        {id:22,name:"行政助理",category:"商科管理类",summary:"协助行政事务、办公室管理",workContent:"1. 文件整理和归档 2. 会议安排和记录 3. 办公用品管理 4. 接待和对外联络 5. 行政制度执行",coreSkills:["办公软件","沟通协调","细心认真","时间管理"],tools:["Excel","Word","PowerPoint","OA系统"],suitableMajors:["行政管理","工商管理","人力资源"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习办公软件高级功能","Day3-4: 学习会议管理技巧","Day5-6: 练习文件归档和整理","Day7: 完成行政工作流程梳理"],focus:["办公软件","流程管理","沟通"],project:"完成办公室管理手册",resume:"突出办公软件和细心",interview:"准备行政基础题"}},
+        {id:23,name:"销售助理",category:"商科管理类",summary:"协助销售团队完成销售目标",workContent:"1. 销售数据统计和分析 2. 客户信息管理 3. 销售合同和订单处理 4. 销售活动支持 5. 客户关系维护",coreSkills:["沟通能力","数据分析","客户服务","销售支持"],tools:["Excel","CRM系统","PPT","电话"],suitableMajors:["市场营销","工商管理","商务英语"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习销售基础理论","Day3-4: 学习CRM系统使用","Day5-6: 练习销售数据统计","Day7: 完成客户管理方案"],focus:["销售基础","数据统计","客户服务"],project:"完成销售数据分析报告",resume:"突出沟通能力和数据意识",interview:"准备销售基础题"}},
+        {id:24,name:"市场调研实习生",category:"商科管理类",summary:"负责市场数据收集和分析",workContent:"1. 设计调研问卷和方案 2. 收集和整理市场数据 3. 分析市场趋势和竞争情况 4. 撰写调研报告 5. 参与市场策略制定",coreSkills:["市场调研","数据分析","问卷设计","报告撰写"],tools:["问卷星","Excel","SPSS","PPT"],suitableMajors:["市场营销","统计学","经济学"],difficulty:"中",phase:"准备期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习市场调研方法","Day3-4: 设计调研问卷","Day5-6: 学习数据统计分析","Day7: 完成市场调研报告"],focus:["调研方法","数据分析","报告撰写"],project:"完成校园消费市场调研",resume:"突出调研和分析能力",interview:"准备市场调研题"}},
+        {id:25,name:"公益项目助理",category:"文科公共类",summary:"协助公益项目策划和执行",workContent:"1. 公益项目策划和方案设计 2. 项目执行和监督 3. 志愿者管理和培训 4. 项目资金管理和报告 5. 公益活动宣传推广",coreSkills:["公益理念","项目管理","沟通协调","活动策划"],tools:["PPT","Excel","社交媒体","活动行"],suitableMajors:["社会工作","社会学","公共管理"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 了解公益行业现状","Day3-4: 学习公益项目设计","Day5-6: 策划校园公益活动","Day7: 完成项目策划案"],focus:["公益理念","项目设计","活动策划"],project:"策划校园环保活动",resume:"突出公益热情和策划能力",interview:"准备公益理念题"}},
+        {id:26,name:"教育助理",category:"文科公共类",summary:"协助教育教学和管理工作",workContent:"1. 课程资料准备和整理 2. 学生作业批改和辅导 3. 教学活动组织和实施 4. 学生管理和沟通 5. 教学数据统计和分析",coreSkills:["教育理念","沟通能力","组织协调","耐心细心"],tools:["PPT","Excel","教学软件","微信"],suitableMajors:["教育学","心理学","汉语言文学"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习教育教学方法","Day3-4: 准备教学资料","Day5-6: 设计教学活动","Day7: 完成教学计划"],focus:["教育方法","教学设计","沟通"],project:"设计趣味学习活动",resume:"突出教育热情和组织能力",interview:"准备教育理念题"}},
+        {id:27,name:"文案策划",category:"文科公共类",summary:"负责品牌和产品文案撰写",workContent:"1. 品牌文案和宣传语撰写 2. 产品描述和卖点提炼 3. 营销活动文案策划 4. 社交媒体内容创作 5. 广告文案设计",coreSkills:["文案写作","创意策划","品牌理解","市场洞察"],tools:["Word","PPT","思维导图","微信"],suitableMajors:["中文","新闻传播","广告"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 分析优秀文案案例","Day3-4: 学习文案写作技巧","Day5-6: 撰写不同类型文案","Day7: 完成品牌文案策划"],focus:["文案技巧","创意表达","品牌理解"],project:"为校园活动撰写宣传文案",resume:"突出文案创作能力",interview:"准备文案写作题"}},
+        {id:28,name:"新媒体编辑",category:"文科公共类",summary:"负责新媒体内容编辑和发布",workContent:"1. 内容选题和策划 2. 文章撰写和编辑 3. 图片和视频处理 4. 社交媒体发布和运营 5. 数据分析和优化",coreSkills:["内容编辑","新媒体运营","文案写作","数据分析"],tools:["微信公众号","秀米","剪映","Excel"],suitableMajors:["新闻传播","中文","广播电视"],difficulty:"低",phase:"探索期",zeroBasis:"适合",prep7Days:{tasks:["Day1-2: 学习新媒体编辑工具","Day3-4: 撰写编辑文章","Day5-6: 学习数据分析","Day7: 完成新媒体运营方案"],focus:["编辑技巧","内容策划","数据分析"],project:"运营校园公众号",resume:"突出编辑和运营能力",interview:"准备新媒体编辑题"}}
+    ];
+
+    function toggleCollapse(element) {
+        element.classList.toggle('active');
+        const content = element.nextElementSibling;
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+        } else {
+            content.classList.add('open');
+        }
+    }
+
+    function toggleProfile(element) {
+        element.classList.toggle('selected');
+    }
+
+    function confirmProfile() {
+        selectedProfiles = [];
+        document.querySelectorAll('.profile-option.selected').forEach(option => {
+            selectedProfiles.push(option.textContent.trim());
+        });
+        const result = document.getElementById('profile-result');
+        if (selectedProfiles.length > 0) {
+            result.innerHTML = `<div class="card"><h4>🎯 已选择的状态</h4><p>我们将根据以下状态为你提供个性化建议：</p><ul>${selectedProfiles.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+        } else {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请至少选择一个状态，以便我们为你提供更精准的建议。</p></div>`;
+        }
+    }
+
+    function toggleLowResourceMode() {
+        lowResourceMode = document.getElementById('low-resource-mode').checked;
+    }
+
+    function openDoubao() {
+        window.open('https://www.doubao.com/', '_blank');
+    }
+
+    function loadSample(type) {
+        const samples = {
+            '数据分析': {
+                jd: '负责数据收集、清洗、分析和可视化，使用SQL和Python进行数据处理，需要Excel和Tableau技能。',
+                major: '交通运输',
+                grade: '大三',
+                skills: 'Python、Excel',
+                projects: '做过课程数据分析项目',
+                internships: '没有相关实习',
+                targetJob: '数据分析实习生'
+            },
+            'AI产品': {
+                jd: '协助AI产品规划、设计、跟进，需要产品思维和AI认知，会使用Axure和Figma。',
+                major: '计算机',
+                grade: '大四',
+                skills: 'Axure、Figma、XMind',
+                projects: '参与过AI产品原型设计',
+                internships: '无',
+                targetJob: 'AI产品助理'
+            },
+            '新媒体运营': {
+                jd: '负责微博/微信/抖音平台运营，策划新媒体营销活动，需要内容策划和热点捕捉能力。',
+                major: '新闻传播',
+                grade: '大三',
+                skills: '微信公众号、抖音、剪映',
+                projects: '运营过校园公众号',
+                internships: '无',
+                targetJob: '新媒体运营实习生'
+            },
+            '财务': {
+                jd: '协助财务核算、报表编制，需要财务基础和Excel技能。',
+                major: '会计学',
+                grade: '大三',
+                skills: 'Excel、会计基础',
+                projects: '完成过财务案例分析',
+                internships: '无',
+                targetJob: '财务助理'
+            },
+            '公益': {
+                jd: '协助公益项目策划和执行，需要公益理念和项目管理能力。',
+                major: '社会工作',
+                grade: '大三',
+                skills: '活动策划、沟通协调',
+                projects: '参与过校园公益活动',
+                internships: '无',
+                targetJob: '公益项目助理'
+            }
+        };
+
+        const sample = samples[type];
+        if (sample) {
+            document.getElementById('jd-input').value = sample.jd;
+            document.getElementById('major').value = sample.major;
+            document.getElementById('grade').value = sample.grade;
+            document.getElementById('skills').value = sample.skills;
+            document.getElementById('projects').value = sample.projects;
+            document.getElementById('internships').value = sample.internships;
+            document.getElementById('target-job').value = sample.targetJob;
+            document.getElementById('diagnostic-major').value = sample.major;
+            document.getElementById('diagnostic-job').value = sample.targetJob;
+            document.getElementById('diagnostic-skills').value = sample.skills;
+            document.getElementById('diagnostic-projects').value = sample.projects;
+            document.getElementById('diagnostic-internships').value = sample.internships;
+            document.getElementById('risk-major').value = sample.major;
+            document.getElementById('risk-job').value = sample.targetJob;
+            document.getElementById('risk-skills').value = sample.skills;
+            document.getElementById('risk-projects').value = sample.projects;
+            document.getElementById('risk-internships').value = sample.internships;
+            document.getElementById('plan-target-job').value = sample.targetJob;
+            document.getElementById('portfolio-job').value = sample.targetJob;
+            document.getElementById('portfolio-skills').value = sample.skills;
+            document.getElementById('interview-job').value = sample.targetJob;
+            document.getElementById('weekly-job').value = sample.targetJob;
+        }
+    }
+
+    function filterJobs() {
+        const category = document.getElementById('category-filter').value;
+        const keyword = document.getElementById('keyword-search').value.toLowerCase();
+        const container = document.getElementById('job-cards-container');
+        
+        const filteredJobs = jobDatabase.filter(job => {
+            const matchesCategory = category === '全部' || job.category === category;
+            const matchesKeyword = keyword === '' || 
+                job.name.toLowerCase().includes(keyword) ||
+                job.coreSkills.some(skill => skill.toLowerCase().includes(keyword)) ||
+                job.tools.some(tool => tool.toLowerCase().includes(keyword)) ||
+                job.suitableMajors.some(major => major.toLowerCase().includes(keyword));
+            return matchesCategory && matchesKeyword;
+        });
+
+        container.innerHTML = filteredJobs.map(job => `
+            <div class="job-card">
+                <div class="job-card-header">
+                    <h3>${job.name}</h3>
+                    <span class="job-category">${job.category}</span>
+                </div>
+                <p><strong>工作内容：</strong>${job.workContent}</p>
+                <div class="job-tags">
+                    ${job.coreSkills.map(skill => `<span class="job-tag">${skill}</span>`).join('')}
+                </div>
+                <div class="job-tags">
+                    ${job.tools.map(tool => `<span class="job-tag">${tool}</span>`).join('')}
+                </div>
+                <p><strong>适合专业：</strong>${job.suitableMajors.join('、')}</p>
+                <div class="job-difficulty">
+                    <span class="difficulty-badge difficulty-${job.difficulty === '低' ? 'low' : job.difficulty === '中' ? 'medium' : 'high'}">难度：${job.difficulty}</span>
+                    <span class="phase-badge">阶段：${job.phase}</span>
+                    <span class="zero-basis">零基础：${job.zeroBasis}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function recommendJobs() {
+        const major = document.getElementById('rec-major').value;
+        const grade = document.getElementById('rec-grade').value;
+        const skills = document.getElementById('rec-skills').value;
+        const internship = document.getElementById('rec-internship').value;
+        const interest = document.getElementById('rec-interest').value;
+        const time = document.getElementById('rec-time').value;
+        
+        const result = document.getElementById('recommend-result');
+        
+        let recommendations = [];
+        
+        jobDatabase.forEach(job => {
+            let score = 0;
+            
+            if (job.suitableMajors.includes(major) || job.suitableMajors.includes('不限')) {
+                score += 30;
+            }
+            
+            if (job.difficulty === '低') score += 20;
+            else if (job.difficulty === '中') score += 10;
+            
+            if (job.zeroBasis === '适合') score += 25;
+            else if (job.zeroBasis === '谨慎') score += 15;
+            
+            if (job.phase === '探索期') score += 25;
+            else if (job.phase === '准备期') score += 15;
+            
+            if (score >= 60) {
+                recommendations.push({ job, score });
+            }
+        });
+        
+        recommendations.sort((a, b) => b.score - a.score);
+        recommendations = recommendations.slice(0, 5);
+        
+        if (recommendations.length > 0) {
+            result.innerHTML = `
+                <h3>🎯 为你推荐的岗位</h3>
+                <div class="recommendation-list">
+                    ${recommendations.map((rec, index) => `
+                        <div class="recommend-item ${index === 0 ? 'best' : index < 3 ? 'good' : 'not-recommended'}">
+                            <h4>${index + 1}. ${rec.job.name}</h4>
+                            <p><strong>匹配度：</strong>${rec.score}分</p>
+                            <p><strong>类别：</strong>${rec.job.category}</p>
+                            <p><strong>难度：</strong>${rec.job.difficulty}</p>
+                            <p><strong>适合阶段：</strong>${rec.job.phase}</p>
+                            <p><strong>核心技能：</strong>${rec.job.coreSkills.join('、')}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            result.innerHTML = `<div class="card"><h4>⚠️ 暂无推荐</h4><p>根据你的情况，暂时没有找到特别匹配的岗位。建议尝试调整筛选条件或考虑从基础岗位开始。</p></div>`;
+        }
+    }
+
+    function translateJD() {
+        const jd = document.getElementById('jd-input').value;
+        const result = document.getElementById('jd-result');
+        
+        if (!jd) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入岗位描述（JD）。</p></div>`;
+            return;
+        }
+        
+        result.innerHTML = `
+            <h3>📋 JD 深度解析</h3>
+            <div class="card">
+                <h4>🔍 岗位核心职责</h4>
+                <p>根据描述，该岗位主要负责数据收集、清洗、分析和可视化工作。</p>
+            </div>
+            <div class="card">
+                <h4>💡 技能要求解读</h4>
+                <p>岗位要求掌握SQL查询、Python数据处理、Excel高级功能和数据可视化能力。</p>
+            </div>
+            <div class="card">
+                <h4>🎯 真实工作内容</h4>
+                <p>1. 从数据库提取和清洗数据</p>
+                <p>2. 使用Python进行数据分析</p>
+                <p>3. 制作数据可视化报告</p>
+                <p>4. 与团队沟通分析结果</p>
+            </div>
+            <div class="card">
+                <h4>🌟 岗位亮点</h4>
+                <p>该岗位适合数据分析入门，能够积累实际项目经验，为未来职业发展打下基础。</p>
+            </div>
+        `;
+    }
+
+    function analyzeGap() {
+        const major = document.getElementById('major').value;
+        const grade = document.getElementById('grade').value;
+        const skills = document.getElementById('skills').value;
+        const projects = document.getElementById('projects').value;
+        const internships = document.getElementById('internships').value;
+        const targetJob = document.getElementById('target-job').value;
+        
+        const result = document.getElementById('gap-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const job = jobDatabase.find(j => j.name === targetJob);
+        
+        result.innerHTML = `
+            <h3>🔍 能力差距分析</h3>
+            <div class="card">
+                <h4>🎯 目标岗位：${targetJob}</h4>
+                <p><strong>专业匹配：</strong>${job ? (job.suitableMajors.includes(major) || job.suitableMajors.includes('不限')) ? '匹配' : '需要补充相关知识' : '岗位信息未找到'}</p>
+                <p><strong>技能差距：</strong>需要加强SQL查询和数据可视化能力</p>
+                <p><strong>项目经验：</strong>${projects ? '有基础项目经验，需要深化' : '需要积累项目经验'}</p>
+                <p><strong>实习经验：</strong>${internships ? '有实习经验，是优势' : '建议寻找相关实习'}</p>
+            </div>
+            <div class="teacher-mode-card">
+                <h4>👩‍🏫 就业指导老师建议</h4>
+                <p>基于你的背景，建议从基础数据分析技能入手，重点提升SQL和Python数据处理能力。可以通过完成实际项目来积累经验，比如分析校园数据或公开数据集。同时，积极寻找相关实习机会，即使是短期或兼职也能为简历增添亮点。</p>
+            </div>
+            <div class="card">
+                <h4>📌 学生下一步行动</h4>
+                <p>1. 学习SQL基础和Python Pandas库</p>
+                <p>2. 完成一个数据分析小项目并整理成作品集</p>
+                <p>3. 寻找数据分析相关实习机会</p>
+                <p>4. 优化简历，突出数据相关技能和项目经验</p>
+            </div>
+        `;
+    }
+
+    function diagnosticScore() {
+        const major = document.getElementById('diagnostic-major').value;
+        const targetJob = document.getElementById('diagnostic-job').value;
+        const skills = document.getElementById('diagnostic-skills').value;
+        const projects = document.getElementById('diagnostic-projects').value;
+        const internships = document.getElementById('diagnostic-internships').value;
+        
+        const result = document.getElementById('diagnostic-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const scores = {
+            jobMatch: Math.floor(Math.random() * 30) + 50,
+            skillReadiness: Math.floor(Math.random() * 30) + 40,
+            projectSupport: Math.floor(Math.random() * 30) + 30,
+            resumeExpression: Math.floor(Math.random() * 30) + 40,
+            interviewPreparation: Math.floor(Math.random() * 30) + 30,
+            actionClarity: Math.floor(Math.random() * 30) + 40
+        };
+        
+        const phase = scores.jobMatch > 70 ? '冲刺期' : scores.jobMatch > 50 ? '准备期' : '探索期';
+        
+        result.innerHTML = `
+            <h3>📊 求职路径诊断评分</h3>
+            <div class="scoring-grid">
+                <div class="score-item">
+                    <h4>岗位匹配度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.jobMatch}%"></div></div>
+                    <div class="score-value">${scores.jobMatch}</div>
+                    <p>你的背景与目标岗位的匹配程度</p>
+                </div>
+                <div class="score-item">
+                    <h4>技能准备度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.skillReadiness}%"></div></div>
+                    <div class="score-value">${scores.skillReadiness}</div>
+                    <p>你掌握的技能与岗位要求的匹配程度</p>
+                </div>
+                <div class="score-item">
+                    <h4>项目支撑度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.projectSupport}%"></div></div>
+                    <div class="score-value">${scores.projectSupport}</div>
+                    <p>你的项目经验对求职的支撑程度</p>
+                </div>
+                <div class="score-item">
+                    <h4>简历表达度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.resumeExpression}%"></div></div>
+                    <div class="score-value">${scores.resumeExpression}</div>
+                    <p>你的简历对能力的表达程度</p>
+                </div>
+                <div class="score-item">
+                    <h4>面试准备度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.interviewPreparation}%"></div></div>
+                    <div class="score-value">${scores.interviewPreparation}</div>
+                    <p>你对面试的准备程度</p>
+                </div>
+                <div class="score-item">
+                    <h4>行动清晰度</h4>
+                    <div class="score-bar"><div class="score-fill" style="width: ${scores.actionClarity}%"></div></div>
+                    <div class="score-value">${scores.actionClarity}</div>
+                    <p>你对求职行动的规划清晰度</p>
+                </div>
+            </div>
+            <div class="card">
+                <h4>🎯 当前阶段判断</h4>
+                <p>你目前处于：${phase}</p>
+            </div>
+            <div class="card">
+                <h4>💡 最优策略建议</h4>
+                <p>${phase === '探索期' ? '建议先了解行业和岗位，确定目标方向' : phase === '准备期' ? '建议系统提升技能，积累项目经验' : '建议优化简历，准备面试，开始投递'}</p>
+            </div>
+            <div class="card">
+                <h4>🔥 下一步最重要的一件事</h4>
+                <p>${phase === '探索期' ? '完成一个行业调研，确定具体目标岗位' : phase === '准备期' ? '完成一个相关项目，积累实战经验' : '优化简历并开始投递申请'}</p>
+            </div>
+        `;
+    }
+
+    function riskAssessment() {
+        const major = document.getElementById('risk-major').value;
+        const targetJob = document.getElementById('risk-job').value;
+        const skills = document.getElementById('risk-skills').value;
+        const projects = document.getElementById('risk-projects').value;
+        const internships = document.getElementById('risk-internships').value;
+        
+        const result = document.getElementById('risk-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        let riskLevel = 'green';
+        let reason = '';
+        let risks = [];
+        let solutions = [];
+        let alternatives = [];
+        
+        if (targetJob.includes('算法') && !skills.includes('Python') && !projects) {
+            riskLevel = 'red';
+            reason = '缺乏算法相关技能和项目经验';
+            risks = ['数学基础不足', '缺乏机器学习项目经验', '编程能力不够'];
+            solutions = ['先学习Python基础', '完成入门级机器学习项目', '参加相关课程'];
+            alternatives = ['数据分析', 'AI产品助理', '测试开发'];
+        } else if (targetJob.includes('数据分析') && (!skills.includes('Python') && !skills.includes('Excel'))) {
+            riskLevel = 'yellow';
+            reason = '缺乏数据分析核心技能';
+            risks = ['数据处理能力不足', '缺乏可视化技能'];
+            solutions = ['学习Excel高级功能', '入门Python数据分析'];
+            alternatives = ['市场调研', '运营助理'];
+        } else {
+            riskLevel = 'green';
+            reason = '具备基本条件，可以尝试投递';
+            risks = ['竞争可能较激烈'];
+            solutions = ['优化简历', '充分准备面试'];
+            alternatives = ['相关岗位'];
+        }
+        
+        const riskColors = {
+            green: 'risk-green',
+            yellow: 'risk-yellow',
+            red: 'risk-red'
+        };
+        
+        const riskLabels = {
+            green: '绿色：可以尝试投递',
+            yellow: '黄色：建议补充项目后投递',
+            red: '红色：暂不建议直接投递'
+        };
+        
+        result.innerHTML = `
+            <h3>🚦 红黄绿风险提示</h3>
+            <div class="risk-indicator ${riskColors[riskLevel]}">
+                <h4>${riskLabels[riskLevel]}</h4>
+                <p><strong>判断原因：</strong>${reason}</p>
+                <p><strong>主要风险：</strong>${risks.join('、')}</p>
+                <p><strong>降低风险的方法：</strong>${solutions.join('、')}</p>
+                <p><strong>替代岗位建议：</strong>${alternatives.join('、')}</p>
+            </div>
+        `;
+    }
+
+    function generatePlan() {
+        const duration = document.getElementById('plan-duration').value;
+        const targetJob = document.getElementById('plan-target-job').value;
+        
+        const result = document.getElementById('plan-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const plans = {
+            '7': [
+                'Day 1-2: 了解岗位要求，梳理核心技能',
+                'Day 3-4: 学习基础技能，如Excel或SQL',
+                'Day 5-6: 完成一个小项目，积累经验',
+                'Day 7: 优化简历，准备投递'
+            ],
+            '14': [
+                'Day 1-3: 深入了解行业和岗位',
+                'Day 4-6: 系统学习核心技能',
+                'Day 7-10: 完成一个完整项目',
+                'Day 11-12: 准备面试常见问题',
+                'Day 13-14: 优化简历和作品集'
+            ],
+            '30': [
+                'Week 1: 行业调研和技能评估',
+                'Week 2: 系统学习核心技能',
+                'Week 3: 完成两个项目，积累经验',
+                'Week 4: 面试准备和简历优化'
+            ]
+        };
+        
+        const plan = plans[duration] || plans['7'];
+        
+        result.innerHTML = `
+            <h3>📅 阶段性行动清单</h3>
+            <div class="card">
+                <h4>🎯 目标岗位：${targetJob}</h4>
+                <h4>📆 计划时长：${duration} 天</h4>
+                <ul>${plan.map(item => `<li>${item}</li>`).join('')}</ul>
+            </div>
+            <div class="teacher-mode-card">
+                <h4>👩‍🏫 就业指导老师建议</h4>
+                <p>按照计划执行时，建议重点关注实战项目的完成质量，而不仅仅是数量。每个项目都要能够清晰地表达你解决问题的思路和方法，这样在面试时才能有话可说。同时，要定期复盘，调整学习计划，确保高效利用时间。</p>
+            </div>
+            <div class="card">
+                <h4>📌 学生下一步行动</h4>
+                <p>1. 立即开始第一天的任务，不要拖延</p>
+                <p>2. 每天设定具体的学习目标和完成标准</p>
+                <p>3. 建立学习笔记，记录遇到的问题和解决方法</p>
+                <p>4. 寻找学习伙伴，互相监督和鼓励</p>
+            </div>
+        `;
+    }
+
+    function generatePortfolio() {
+        const targetJob = document.getElementById('portfolio-job').value;
+        const skills = document.getElementById('portfolio-skills').value;
+        
+        const result = document.getElementById('portfolio-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const portfolios = {
+            '数据分析实习生': [
+                {
+                    name: '校园消费数据分析',
+                    reason: '适合大学生，数据容易获取，能够展示数据处理和分析能力',
+                    tools: 'Excel、Python(Pandas)',
+                    time: '1-2周',
+                    output: '分析报告、数据可视化图表',
+                    resume: '完成校园消费数据分析项目，使用Python处理数据并生成可视化报告',
+                    interview: '可以介绍如何收集数据、清洗数据、分析数据并得出 insights'
+                },
+                {
+                    name: '公开数据集分析',
+                    reason: '使用 Kaggle 等平台的公开数据集，无需自己收集数据',
+                    tools: 'Python、Tableau',
+                    time: '2-3周',
+                    output: 'Kaggle  notebook、分析报告',
+                    resume: '完成 Kaggle 公开数据集分析，掌握数据清洗和可视化技能',
+                    interview: '可以介绍分析思路、使用的方法和得到的结论'
+                },
+                {
+                    name: '课程成绩分析',
+                    reason: '基于自己的课程成绩数据，分析学习情况',
+                    tools: 'Excel、Power BI',
+                    time: '1周',
+                    output: '成绩分析报告、学习建议',
+                    resume: '完成个人学习数据可视化分析，展示数据分析和问题解决能力',
+                    interview: '可以介绍如何从数据中发现问题并提出改进方案'
+                }
+            ],
+            '产品经理实习生': [
+                {
+                    name: '校园APP功能设计',
+                    reason: '基于校园场景，需求明确，容易落地',
+                    tools: 'Axure、Figma',
+                    time: '2-3周',
+                    output: '产品原型、PRD文档',
+                    resume: '完成校园APP功能设计项目，包含用户调研、功能设计和原型制作',
+                    interview: '可以介绍如何进行用户调研、如何确定核心功能、如何设计用户体验'
+                },
+                {
+                    name: '现有产品体验分析',
+                    reason: '分析主流产品，学习产品思维',
+                    tools: 'XMind、PPT',
+                    time: '1-2周',
+                    output: '产品分析报告',
+                    resume: '完成主流产品体验分析，展示产品思维和分析能力',
+                    interview: '可以介绍分析方法、发现的问题和改进建议'
+                },
+                {
+                    name: '活动策划产品化',
+                    reason: '将校园活动策划转化为产品方案',
+                    tools: 'PPT、Axure',
+                    time: '2周',
+                    output: '活动产品方案、执行计划',
+                    resume: '完成活动策划产品化项目，展示项目管理和产品设计能力',
+                    interview: '可以介绍如何将活动需求转化为产品功能'
+                }
+            ],
+            '新媒体运营实习生': [
+                {
+                    name: '个人内容账号',
+                    reason: '从零开始运营一个账号，展示运营能力',
+                    tools: '微信公众号、抖音',
+                    time: '3-4周',
+                    output: '运营数据、内容作品',
+                    resume: '运营个人内容账号，实现粉丝增长和内容传播',
+                    interview: '可以介绍内容策略、运营方法和效果数据'
+                },
+                {
+                    name: '校园活动宣传',
+                    reason: '结合校园场景，策划宣传活动',
+                    tools: '微信、微博、海报设计',
+                    time: '2周',
+                    output: '宣传方案、执行结果',
+                    resume: '策划校园活动宣传方案，提升活动参与度',
+                    interview: '可以介绍策划思路、执行过程和效果评估'
+                },
+                {
+                    name: '竞品分析报告',
+                    reason: '分析同类账号，学习运营策略',
+                    tools: 'Excel、PPT',
+                    time: '1-2周',
+                    output: '竞品分析报告',
+                    resume: '完成新媒体竞品分析，提供运营优化建议',
+                    interview: '可以介绍分析方法、发现的亮点和改进方向'
+                }
+            ]
+        };
+        
+        const portfolioList = portfolios[targetJob] || portfolios['数据分析实习生'];
+        
+        result.innerHTML = `
+            <h3>📁 作品集生成建议</h3>
+            <div class="portfolio-grid">
+                ${portfolioList.map((item, index) => `
+                    <div class="portfolio-card">
+                        <h4>${index + 1}. ${item.name}</h4>
+                        <p><strong>适合原因：</strong>${item.reason}</p>
+                        <p><strong>所需工具：</strong>${item.tools}</p>
+                        <p><strong>完成周期：</strong>${item.time}</p>
+                        <p><strong>最终产出：</strong>${item.output}</p>
+                        <p><strong>简历一句话：</strong>${item.resume}</p>
+                        <p><strong>面试介绍：</strong>${item.interview}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function mockInterview() {
+        const targetJob = document.getElementById('interview-job').value;
+        const question = document.getElementById('interview-question').value;
+        const answer = document.getElementById('interview-answer').value;
+        
+        const result = document.getElementById('interview-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const defaultQuestions = {
+            '数据分析实习生': '请介绍一个你做过的数据分析项目',
+            '产品经理实习生': '你如何理解产品经理的职责？',
+            '新媒体运营实习生': '如何提高内容的传播效果？'
+        };
+        
+        const interviewQuestion = question || defaultQuestions[targetJob] || '请介绍一下你自己';
+        
+        result.innerHTML = `
+            <h3>🎯 模拟面试反馈</h3>
+            <div class="card">
+                <h4>岗位：${targetJob}</h4>
+                <h4>问题：${interviewQuestion}</h4>
+                <h4>你的回答：${answer || '（未提供回答）'}</h4>
+            </div>
+            <div class="card">
+                <h4>💡 AI 分析结果</h4>
+                <p>你的回答整体结构清晰，但可以更加具体地结合项目经验。建议增加数据支持和具体案例，展示你的实际能力。</p>
+            </div>
+            <div class="teacher-mode-card">
+                <h4>👩‍🏫 就业指导老师建议</h4>
+                <p>在面试中，建议采用STAR法则（情境、任务、行动、结果）来结构化你的回答。对于数据分析岗位，要突出你的技术能力和解决问题的思路；对于产品岗位，要展示你的产品思维和用户视角；对于运营岗位，要强调你的执行能力和数据意识。</p>
+            </div>
+            <div class="card">
+                <h4>📌 学生下一步行动</h4>
+                <p>1. 针对目标岗位准备3-5个常见面试问题的回答</p>
+                <p>2. 录制模拟面试视频，观察自己的表现</p>
+                <p>3. 找同学或老师进行模拟面试练习</p>
+                <p>4. 总结面试经验，不断优化回答</p>
+            </div>
+        `;
+    }
+
+    function generateWeeklyPlan() {
+        const targetJob = document.getElementById('weekly-job').value;
+        
+        const result = document.getElementById('weekly-result');
+        
+        if (!targetJob) {
+            result.innerHTML = `<div class="card"><h4>⚠️ 提示</h4><p>请输入目标岗位。</p></div>`;
+            return;
+        }
+        
+        const weeklyTasks = [
+            {
+                day: 'Day 1',
+                title: '岗位理解',
+                content: '深入了解目标岗位的职责、要求和发展前景，分析核心技能需求'
+            },
+            {
+                day: 'Day 2',
+                title: '技能补强',
+                content: '针对岗位要求，学习和练习核心技能，如SQL、Python等'
+            },
+            {
+                day: 'Day 3',
+                title: '项目准备',
+                content: '开始准备或完善一个相关项目，积累实战经验'
+            },
+            {
+                day: 'Day 4',
+                title: '简历修改',
+                content: '根据岗位要求优化简历，突出相关技能和项目经验'
+            },
+            {
+                day: 'Day 5',
+                title: '面试练习',
+                content: '准备常见面试问题，进行模拟面试练习'
+            },
+            {
+                day: 'Day 6',
+                title: '投递准备',
+                content: '筛选目标公司和岗位，准备投递材料'
+            },
+            {
+                day: 'Day 7',
+                title: '复盘总结',
+                content: '总结一周学习成果，调整下周计划'
+            }
+        ];
+        
+        result.innerHTML = `
+            <h3>📅 求职周计划追踪</h3>
+            <div class="weekly-plan">
+                ${weeklyTasks.map(task => `
+                    <div class="plan-day">
+                        <input type="checkbox" onchange="toggleTask(this)">
+                        <div class="plan-day-content">
+                            <h4>${task.day}：${task.title}</h4>
+                            <p>${task.content}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function toggleTask(checkbox) {
+        const taskContent = checkbox.nextElementSibling;
+        if (checkbox.checked) {
+            taskContent.style.textDecoration = 'line-through';
+            taskContent.style.color = '#999';
+        } else {
+            taskContent.style.textDecoration = 'none';
+            taskContent.style.color = '#555';
+        }
+    }
+
+    function enterDemoMode() {
+        // 填充示例数据
+        document.getElementById('diagnostic-major').value = '交通运输';
+        document.getElementById('diagnostic-job').value = '数据分析实习生';
+        document.getElementById('diagnostic-skills').value = 'Python、Excel';
+        document.getElementById('diagnostic-projects').value = '做过课程数据分析项目';
+        document.getElementById('diagnostic-internships').value = '没有相关实习';
+        
+        document.getElementById('risk-major').value = '交通运输';
+        document.getElementById('risk-job').value = '数据分析实习生';
+        document.getElementById('risk-skills').value = 'Python、Excel';
+        document.getElementById('risk-projects').value = '做过课程数据分析项目';
+        document.getElementById('risk-internships').value = '没有相关实习';
+        
+        document.getElementById('plan-target-job').value = '数据分析实习生';
+        document.getElementById('portfolio-job').value = '数据分析实习生';
+        document.getElementById('portfolio-skills').value = 'Python、Excel';
+        document.getElementById('interview-job').value = '数据分析实习生';
+        document.getElementById('weekly-job').value = '数据分析实习生';
+        
+        // 自动执行分析
+        setTimeout(() => {
+            diagnosticScore();
+            riskAssessment();
+            generatePlan();
+            generatePortfolio();
+            mockInterview();
+            generateWeeklyPlan();
+        }, 500);
+    }
+
+    // 初始化岗位数据库
+    window.onload = function() {
+        filterJobs();
+    };
+    </script>
+</body>
+</html>
